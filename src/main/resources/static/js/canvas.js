@@ -173,13 +173,15 @@ const paintOnClick = event => {
   let x = event.pageX - canvas.offsetLeft;
   let y = event.pageY - canvas.offsetTop;
 
+  console.log(x,y);
+
   // TODO: use these x y coordinates to determine the row and col of
   // the clicked tile
 
-  let col = Math.floor(x / TILE_WIDTH);
   let row = Math.floor(y / TILE_HEIGHT);
+  let col = Math.floor(x / TILE_WIDTH);
 
-  console.log(col, row);
+  console.log(row, col);
 
 
   // TODO: get the selected toggle setting by indexing into the array 'flags'
@@ -193,8 +195,7 @@ const paintOnClick = event => {
     // you chose in paintToggle(). Remember that after coloring,
     // you're going to want to draw the text again using ctx.fillText()
     ctx.fillStyle = '#000000';
-    // ctx.fillRect(row*TILE_WIDTH, col*TILE_HEIGHT, (row+1)*TILE_WIDTH, (col+1)*TILE_HEIGHT);
-    ctx.fillRect(col*TILE_HEIGHT, row*TILE_WIDTH, (col+1)*TILE_WIDTH, (row+1)*TILE_HEIGHT);
+    ctx.fillRect((col)*TILE_WIDTH, row*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
     ctx.fillStyle = '#FFFFFF';
     ctx.fillText("ON", (col)*TILE_WIDTH+40, (row+1)*TILE_HEIGHT-15);
 
@@ -202,28 +203,49 @@ const paintOnClick = event => {
     // you chose as the base toggle pane color. This will mimic the effect of
     // deselecting the 'off' tile when 'on' is selected. Remember again that
     // after coloring, you're going to want to redraw the text.
+    ctx.fillStyle = '#dcdcdc';
+    ctx.fillRect((col+1)*TILE_WIDTH, row*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+    ctx.fillStyle = '#000000';
+    ctx.fillText("off", (col+1)*TILE_WIDTH+40, (row+1)*TILE_HEIGHT-15);
+
 
     // TODO: using the selected toggle setting that you defined in a previous
     // todo, add this into the 'selection' array we defined globally. Remember
     // that you only want to add this setting if it isn't already in the
     // 'selection' array, so be sure to check for that first!
+    if (!selection.includes(setting)) {
+      selection.push(setting);
+    }
+
   } else if (col == 2) {
     // case - the user selected 'off'
 
     // TODO: color the current tile using ctx.fillRect() with whichever select
     // you chose in paintToggle(). Remember that after coloring,
     // you're going to want to draw the text again using ctx.fillText()
+    ctx.fillStyle = '#000000';
+    ctx.fillRect((col)*TILE_WIDTH, row*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText("OFF", (col)*TILE_WIDTH+40, (row+1)*TILE_HEIGHT-15);
 
     // TODO: color the adjacent tile (ie. the 'on' tile) with whichever color
     // you chose as the base toggle pane color. This will mimic the effect of
     // deselecting the 'on' tile when 'off' is selected. Remember again that
     // after coloring, you're going to want to redraw the text.
+    ctx.fillStyle = '#dcdcdc';
+    ctx.fillRect((col-1)*TILE_WIDTH, row*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+    ctx.fillStyle = '#000000';
+    ctx.fillText("on", (col-1)*TILE_WIDTH+40, (row+1)*TILE_HEIGHT-15);
+
 
     // TODO: using the selected toggle setting that you defined in a previous
     // todo, remove this from the 'selection' array we defined globally. Remember
     // that you only want to remove this setting if it is in the
     // 'selection' array, so be sure to check for that first!
-
+    const index = selection.indexOf(setting);
+    if (index > -1) {
+      selection.splice(index, 1);
+    }
   }
 
 }
